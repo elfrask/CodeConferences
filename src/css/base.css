@@ -1,0 +1,35 @@
+
+
+* {
+    padding: 0%;
+    margin: 0px;
+    color: white;
+}
+
+.head {
+    display: block;
+    width: calc(100% - 26px);
+    height: 50px;
+    align-items: center;
+    padding: 13px;
+
+
+    background-color: rgb(70, 70, 70);
+}
+
+.body {
+    
+    width: 100%;
+    height: calc(100% - 76px);
+
+    background-color: rgb(40, 40, 40);
+
+}
+
+.r {float: right;} .l {float: left;}
+
+.img {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
