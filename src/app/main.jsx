@@ -8,6 +8,7 @@ class App extends React.Component {
 
     state = {
         room_code:"",
+        user:"",
         master:false,
         join:false,
         login:true,
@@ -102,11 +103,26 @@ class App extends React.Component {
 
                     {(
                         this.state.join?(
-                            this.state.master?(
-                                []                        
-                            ):(
-                                []
-                            )    
+                               //   this.state.master?(
+                               //       []                        
+                               //   ):(
+                               //       []
+                               //   ) 
+                            <div className="fill">
+
+                                <div className="head_mobile">
+                                    <div className="bthead_mobile medio">
+                                        Editor
+                                    </div>
+                                    <div className="bthead_mobile medio">
+                                        Vista previa
+                                    </div>
+                                </div>
+                                <div className="body_mobile">
+
+                                </div>
+
+                            </div>   
                         ):(
                             <div className="medio fill">
                                 <div className="boxjoin">
@@ -124,10 +140,41 @@ class App extends React.Component {
                                                 // Unirme
                                                 <div>
                                                     <center className="join_come">
-                                                        <input placeholder="Nombre" id="nombre" type="text" className="form_input_join" />
-                                                        <input placeholder="Codigo" id="Codigode invitacion" type="text" className="form_input_join" />
-                                                        <div className="sumit">
-                                                            Unirme
+                                                        <div className="content_box_join_sep1">
+                                                            <input placeholder="Nombre" id="nombre" type="text" className="form_input_join" />
+                                                            <input placeholder="Codigo de invitacion" id="codigo" type="text" className="form_input_join" />
+
+                                                        </div>
+                                                        <div className="content_box_join_sep2">
+
+                                                        </div>
+                                                        <div className="content_box_join_sep3 medio">
+
+                                                            <div className="sumit" onClick={() => {
+                                                                let nombre = go("nombre").value;
+                                                                let codigo = go("codigo").value;
+
+                                                                if ((nombre+"").length < 5) {
+                                                                    alert("tu nombre debe de tener por lo menos 5 caracteres")
+                                                                    return null
+                                                                }
+
+                                                                send("/join_room", {user:nombre, code:codigo}).then(x=>{
+
+                                                                    if (!x.error) {
+                                                                        this.setState({
+                                                                            code:x.code,
+                                                                            user:nombre,
+                                                                            join:true
+                                                                        })
+                                                                    } else {
+                                                                        alert("Codigo o nombre invalido")
+                                                                    }
+
+                                                                })
+                                                            }}>
+                                                                Unirme
+                                                            </div>
                                                         </div>
                                                     </center>
                                                 </div>
@@ -135,9 +182,37 @@ class App extends React.Component {
                                                 // Crear
                                                 <div>
                                                     <center className="join_come">
-                                                        <input placeholder="Nombre" id="nombre" type="text" className="form_input_join" />
-                                                        <div className="sumit">
-                                                            Crear sala
+                                                        <div className="content_box_join_sep1">
+                                                            <input placeholder="Nombre" id="nombre" type="text" className="form_input_join" />
+
+                                                        </div>
+                                                        <div className="content_box_join_sep2">
+
+                                                        </div>
+                                                        <div className="content_box_join_sep3 medio">
+
+                                                            <div className="sumit" onClick={() => {
+                                                                let nombre = go("nombre").value;
+
+                                                                if ((nombre+"").length < 5) {
+                                                                    alert("tu nombre debe de tener por lo menos 5 caracteres")
+                                                                    return null
+                                                                }
+
+                                                                send("/create_room", {user:nombre}).then(x=>{
+
+                                                                    this.setState({
+                                                                        code:x.code,
+                                                                        user:nombre,
+                                                                        master:true,
+                                                                        join:true
+                                                                    });
+
+                                                                    console.log(x)
+                                                                })
+                                                            }}>
+                                                                Crear sala
+                                                            </div>
                                                         </div>
                                                     </center>
                                                 </div>
@@ -210,5 +285,17 @@ ReactDOM.render(
     document.body,
     () => {
         console.log("App is load end")
+
+        send("/islogin").then(x=>{
+            if (x.login) {
+                app_instanced.setState({
+                    user:x.user,
+                    code:x.code,
+                    master:x.master,
+                    join:true,
+                    login:true
+                })
+            }
+        })
     }
 )

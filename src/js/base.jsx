@@ -1,5 +1,15 @@
 let go = (a) => document.getElementById(a);
 let asi = (a, b) => Object.assign(a,b);
+let send = (url, body) => (new Promise((res, err) => {
+    fetch(url, {
+        "body":JSON.stringify(body||{}),
+        "method":"POST",
+        "mode":"no-cors",
+        "headers":{
+            'Content-Type': 'application/json',
+        }
+    }).then(x=>x.json().then(e=>res(e))).catch(x=>err(x));
+}))
 function range(i, f) {
     let salida = [];
     for (let x = i; x < f; x++) {
