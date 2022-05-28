@@ -59,7 +59,9 @@ function Create_Room(username) {
 
     } while (rooms[code])
 
-    code = "C000000"
+    
+
+    if(process.argv[2] == "//debug") code = "C000000";
 
 
     let room = {
