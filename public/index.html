@@ -5,17 +5,55 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplicaion de conferencias</title>
+
+    <!-- Bases de la web app -->
+
     <link rel="stylesheet" href="/src/css/base.css">
     <script src="socket.io/socket.io.js"></script>
     <script src="/src/js/react/react.js"></script>
     <script src="/src/js/react/react-dom.js"></script>
     <script src="/src/js/react/babel.js"></script>
 
+    <!-- Bases del editor -->
+
+    <script src="/codemirror/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="/codemirror/theme/tomorrow-night-bright.css">
+
+    <!-- Lenguajes -->
+
+    <script src="/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="/codemirror/mode/css/css.js"></script>
+    <script src="/codemirror/mode/javascript/javascript.js"></script>
+
+    <script src="/codemirror/mode/textile/textile.js"></script>
+    <script src="/codemirror/mode/jsx/jsx.js"></script>
+    <script src="/codemirror/mode/xml/xml.js"></script>
+    <script src="/codemirror/mode/python/python.js"></script>
+
+    <!-- Complementos del editor -->
+
+    <script src="/codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="/codemirror/addon/edit/closebrackets.js"></script>
+    <script src="/codemirror/addon/fold/foldcode.js"></script>
+    <script src="/codemirror/addon/hint/show-hint.js"></script>
+    <link rel="stylesheet" href="/codemirror/addon/hint/show-hint.css">
+
+    <script src="/codemirror/addon/hint/javascript-hint.js"></script>
+    <script src="/codemirror/addon/hint/html-hint.js"></script>
+    <script src="/codemirror/addon/hint/css-hint.js"></script>
+    <script src="/codemirror/addon/hint/xml-hint.js"></script>
+
+
+    <!-- Bases programadas -->
+
 
     <script src="/src/js/base.jsx" type="text/babel"></script>
 </head>
 <body>
-    
+    <div id="_app" class="fill">
+
+    </div>
 </body>
 
     {script}

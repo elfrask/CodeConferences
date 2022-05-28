@@ -6,8 +6,8 @@
 * {
     padding: 0%;
     margin: 0px;
-    color: white;
     font-family: "jet";
+    color: white;
 }
 
 .head {
@@ -41,6 +41,15 @@
     background-repeat: no-repeat;
     background-size: 100%;
 }
+
+.img_bt {
+    transition: 0.4s;
+    cursor: pointer;
+}
+.img_bt:hover {
+    background-color: rgb(97, 97, 97)
+}
+
 
 .bta {
     display: flex;
@@ -134,6 +143,16 @@
     margin-bottom: 10px;
     padding: 20px;
     color: black;
+    background-color: white;
+}
+
+.form_input {
+    width: calc(100%);
+    font-size: 20px;
+    margin-bottom: 10px;
+    padding: 20px;
+    color: black;
+    background-color: white;
 }
 
 .join_come {
@@ -173,13 +192,164 @@
     width: 50%;
     height: 100%;
     font-size: 16px;
+    float: left;
+    transition: 0.4s;
+}
+.bthead_mobile:hover {
+    background-color: rgba(65, 65, 65);
+}
+
+.header_control {
+    width: 100%;
+    height: 50px;
+}
+.body_control {
+    width: 100%;
+    height: calc(100% - 50px);
+}
+
+
+.editor {
+    width: 450px;
+    height: 100%;
+    background-color: rgb(24, 24, 24);
+}
+
+.preview {
+    width: calc(100% - 450px);
+    height: 100%;
+}
+
+.img60{
+    background-size: 60%;
+}
+
+.iframe_preview {
+    border: none;
+}
+
+
+
+/* administrado de archivos */
+
+.folder_box {
+    width: 100%;
+    height: max-content;
+}
+
+
+
+
+.folder_title {
+    width: 100%;
+    height: 40px;
+    transition: 0.4s;
+}
+.folder_title:hover {
+    background-color: rgb(63, 63, 63);
+}
+
+.folder_name {
+    width: calc(100% - 160px);
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.folder_nodes {
+    width: calc(100% - 20px);
+    height: max-content;
+    border-left: solid #707070 4px;
+    padding-left: 16px;
+}
+
+
+
+
+.file_box {
+    width: 100%;
+    height: 40px;
+    transition: 0.4s;
+    
+}
+
+.file_box:hover {
+    background-color: rgb(63, 63, 63);
+}
+
+.file_name {
+    width: calc(100% - 120px);
+    height: 40px;
+    display: flex;
+    align-items: center;
 }
 
 
 /* Portrait */
 
 
+.chat-box {
+    width: 100%;
+    max-width: 400px;
+    position: fixed;
+    transition: 0.4s;
+    height: max-content;
+
+    left: calc(100% - 450px);
+}
+
+
+.head-chat {
+
+    width: 100%;
+    height: 50px;
+    background-color: rgb(20, 20, 20);
+    cursor: pointer;
+    
+}
+
+.body-chat {
+
+    width: 100%;
+    height: 450px;
+
+    background-color: rgb(40, 40, 40);
+    color: white;
+
+
+}
+
+.chat-camp {
+    width: 100%;
+    height: 50px;
+
+}
+.chat {
+    width: 100%;
+    height: calc(100% - 50px);
+    background-color: rgb(30, 30, 30);
+    overflow: auto;
+
+}
+.content-msg {
+    width: calc(100% - 20px);
+    padding: 10px;
+}
+
+
 @media screen and (max-width: 500px) {
+
+    .chat-box {
+        left: 0px;
+    }
+
+    .editor{
+        width: 100%;
+    }
+    .preview{
+        width: 100%;
+    }
+    
 
     .land {display: none;}
 
