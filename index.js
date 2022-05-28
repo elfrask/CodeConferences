@@ -92,30 +92,41 @@ function getRoom(code, call) {
 
 
 io.on("connection", (socket) => {
-    
     let user = "";
     let code = "";
 
-    socket.on("chat", (data) => {
-        //socket.emit("chat", data)
+    function distribuir(event) {
+        socket.on(event, (data) => {
+            //socket.emit("chat", data)
+    
+            let x = JSON.parse(data);
+    
+            
+            getRoom(x.code, (d, err) => {
+                if (err) {
+                    
+                } else {
+                    d.live.forEach(x=> {
+                        x.emit(event, data)
+                    })
+                }
+            })
+    
+        });
+    }
 
-        let x = JSON.parse(data);
-
-        
-        getRoom(x.code, (d, err) => {
-            if (err) {
-                
-            } else {
-                d.live.forEach(x=> {
-                    x.emit("chat", data)
-                })
-            }
-        })
-
-    });
+    distribuir("chat");
+    distribuir("set");
+    distribuir("run");
+    distribuir("update");
+    distribuir("getState");
+    distribuir("refresh_tree");
+    
+    
 
     socket.on("login", (data) => {
         let x = JSON.parse(data);
+
 
         getRoom(x.code, (room, err) => {
             if (err) {
@@ -126,6 +137,9 @@ io.on("connection", (socket) => {
                 
                 room.live[x.user] = socket;
                 room.live.push(socket)
+
+                user = x.user;
+                code = x.code;
                 
                 socket.emit("islogin", "true");
 
@@ -153,15 +167,15 @@ io.on("connection", (socket) => {
     });
     
     socket.on("voice", function (dat) {
-        let data = dat.body
-        let newData = data.split(";");
+        let data = JSON.parse(dat)
+        let newData = data.body.split(";");
         newData[0] = "data:audio/ogg;";
         newData = newData[0] + newData[1];
     
-        getRoom(dat.code, (room, err) => {
+        getRoom(data.code, (room, err) => {
             if (!err) {
                 room.live.forEach(x=> {
-                    x.emit("voice", newData)
+                    x.emit("voice", JSON.stringify({data: newData, user:data.user}))
                 })
             }
         })
@@ -172,7 +186,7 @@ io.on("connection", (socket) => {
 
     console.log("a user connected");
     console.log("cookies:", cookie);
-    console.log("cookies:", cookie.username);
+    console.log("cookies:", cookie.user);
 
 
 

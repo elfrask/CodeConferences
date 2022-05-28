@@ -13,6 +13,40 @@ function emit(eve, data) {
 }
 
 
+let INFO = (
+    <div className="fill" style={{
+        "overflow":"auto",
+        "display":"flex",
+        "justifyContent":"center"
+    }}>
+
+        <div style={{"width":"calc(100% - 20px)"}}>
+            CodingLive es una app de conferencias en vivo cuyo objetivo
+            es dar la facilidad a los programadores de desarrollar 
+            un ambiente de trabajo en vivo donde otras personas podran
+            presenciar en tiempo real el codigo y el comportamiento de este.
+            ideal para las conferencias con tematica de programacion, entrevistas o
+            dar clases a distancia.
+            <br /><br />
+            la app funciona con tecnologia de NodeJS y esta programado con 
+            las librerias y frameworks de ReactJS, Express y SocketIO
+            <br /><br />
+            Esta app fue creado por su autor: 
+            
+            <a href="https://portafolio.frask.repl.co" style={{color:"gold"}}>
+                Frask Dreemurr
+
+            </a>
+            <br />
+            Version de la app: 1.0.0
+            <div style={{width:"100%", "height":"90px"}}>
+
+            </div>
+        </div>
+    </div>
+)
+
+
 
 
 let users = [];
@@ -70,6 +104,7 @@ class App extends React.Component {
         ori_v:false,
         mic:true,
         chat:false,
+        mode_explore:false
     };
 
     render() {
@@ -87,6 +122,11 @@ class App extends React.Component {
                 editor:true,
                 preview:true
             }
+        }
+
+        let gui_explorer_mode = (this.state.master?"1":"0.5");
+        if (this.state.mode_explore) {
+            gui_explorer_mode = "1"
         }
 
         return (
@@ -117,7 +157,7 @@ class App extends React.Component {
                                                                 "cursor":"pointer",
                                                                 "fontSize":"20px"
                                                             }} onClick={() => {
-                                                                copy(this.state.room_code);
+                                                                copy(this.state.code);
                                                                 show(
                                                                     <div className="fill medio">
                                                                         <h3 style={{"color":"greenyellow"}}>
@@ -126,7 +166,7 @@ class App extends React.Component {
                                                                     </div>
                                                                 )
                                                             }}>
-                                                                {this.state.room_code}
+                                                                {this.state.code}
                                                             </div> 
                                                             
                                                         </center>
@@ -187,17 +227,7 @@ class App extends React.Component {
                         "backgroundImage":`url("/src/img/icons/info.png")`
                     }} onClick={() => {
                         show(
-                            <div>
-                                {
-                                    range(0, 20).map(x => {
-                                        return (
-                                            <h1>
-                                                Hola mundo
-                                            </h1>
-                                        )
-                                    }) 
-                                }
-                            </div>,
+                            INFO,
                             () => {
 
                             }
@@ -249,16 +279,73 @@ class App extends React.Component {
                                         <div
                                             className="header_control"
                                         >
-                                            <Img className="l img_bt img60" img="/src/img/icons/edit.png" size="50px" click={() => {
+                                            <Img
+                                            title="Editor"
+                                            style={{"opacity":gui_explorer_mode}}
+                                            className="l img_bt img60" img="/src/img/icons/edit.png" size="50px" click={() => {
                                                 // Editor
+
+                                                if (!this.state.master) {
+
+                                                    if (!this.state.mode_explore) {
+                                                        return null
+                                                    }
+                                                    
+                                                }
                                                 
-                                                this.setState({edit:true})
+                                                this.setState({edit:true});
+                                                if (this.state.master) emit("set", {state: {
+                                                    edit: true
+                                                }})
+                                                
 
                                             }} />
-                                            <Img className="l img_bt img60" img="/src/img/icons/files.png" size="50px" click={() => {
+                                            <Img
+                                            title="Sistema de archivos"
+                                            style={{"opacity":gui_explorer_mode}}
+                                            className="l img_bt img60" img="/src/img/icons/files.png" size="50px" click={() => {
                                                 // Sistema de archivos
                                                 
-                                                this.setState({edit:false})
+                                                if (!this.state.master) {
+
+                                                    if (!this.state.mode_explore) {
+                                                        return null
+                                                    }
+                                                    
+                                                }
+                                                
+                                                this.setState({edit:false});
+                                                if (this.state.master) emit("set", {state: {
+                                                    edit: false
+                                                }})
+                                                
+
+                                            }} />
+
+                                            <Img
+                                            style={{
+                                                "opacity":(!this.state.mode_explore?"1":"0.5"),
+                                                "display":(this.state.master?"none":"block"),
+                                            }}
+                                            title="Modo explorador"
+                                            className="r img_bt img60" img="/src/img/icons/view.png" size="50px" click={() => {
+                                                // Modo explorador
+                                                
+                                                let nuevo_modo_explorador = !this.state.mode_explore
+                                                
+
+
+
+
+                                                this.setState({mode_explore: nuevo_modo_explorador}, () => {
+
+                                                    if (!nuevo_modo_explorador) {
+                                                        emit("getState", {})
+                                                    }
+
+                                                })
+                                                
+                                                
 
                                             }} />
                                         
@@ -308,7 +395,11 @@ class App extends React.Component {
                                         <div
                                             className="header_control"
                                         >
-                                            <Img className="l img_bt img60" img="/src/img/icons/refresh.png" size="50px" click={() => {
+                                            <Img 
+                                            title="Actualizar" 
+                                            className="l img_bt img60" 
+                                            img="/src/img/icons/refresh.png" 
+                                            size="50px" click={() => {
                                                 // actualizar el archivo
                                                 let iframe = go("iframe");
 
@@ -321,7 +412,11 @@ class App extends React.Component {
 
                                             }} />
 
-                                            <Img className="r img_bt img60" img="/src/img/icons/open.png" size="50px" click={() => {
+                                            <Img 
+                                            title="Abrir en una pagina"
+                                            className="r img_bt img60" 
+                                            img="/src/img/icons/open.png" 
+                                            size="50px" click={() => {
                                                 // Abrir en una pagina
                                                 let iframe = go("iframe");
 
@@ -334,8 +429,12 @@ class App extends React.Component {
 
                                             }} />
 
-                                            <Img className="r img_bt img60" img="/src/img/icons/find.png" size="50px" click={() => {
-                                                // Abrir en una pagina
+                                            <Img 
+                                            title="Ir a ..."
+                                            className="r img_bt img60" 
+                                            img="/src/img/icons/find.png" 
+                                            size="50px" click={() => {
+                                                // Redirigir a una url
 
                                                 saveFile(() => {
 
@@ -350,7 +449,11 @@ class App extends React.Component {
                                             }} />
 
                                             
-                                            <Img className="l img_bt img60" img="/src/img/icons/back.png" size="50px" click={() => {
+                                            <Img 
+                                            title="Retroceder"
+                                            className="l img_bt img60" 
+                                            img="/src/img/icons/back.png" 
+                                            size="50px" click={() => {
                                                 // ir hacia atras
                                                 let iframe = go("iframe");
 
@@ -638,7 +741,7 @@ class App extends React.Component {
 }
 
 let chat_elements = [];
-let limit_chat = 100;
+let limit_chat = 1000;
 let chatColors = ["red", "crimson", "dodgerblue", "green", "yellowgreen", "orange", "gold"]
 let NamesColors = {}
 
@@ -959,6 +1062,13 @@ let eventos_editor = {
                 
             },
             open:(path) => {
+
+                if(!app_instanced.state.master) {
+                    if (!app_instanced.state.mode_explore) {
+                        return null
+                    }
+                };
+
                 fs.read(path, (data, err) => {
 
                     //console.log(path, err)
@@ -980,8 +1090,17 @@ let eventos_editor = {
                             let extencion = get_ext(path)
     
                             run(ext[extencion], path, data)
-    
+                            
                             app_instanced.setState({edit:true})
+                            
+                            if(app_instanced.state.master) {
+                                
+                                emit("run", {
+                                    arg: [ ext[extencion], path, data ]
+                                })
+                                emit("set", {state:{edit:true}})
+                            };
+                            
                         
                         })
 
@@ -1020,6 +1139,7 @@ function refresh_fs_tree() {
         //console.log("tree:", x)
         render_tree(go("edit2"), x.app, "app", eventos_editor.FileSystem, () => {
             console.warn("Files system tree is loadend")
+            if (app_instanced.state.master) emit("refresh_tree", {})
         })
     })
 }
@@ -1058,62 +1178,186 @@ function saveFile(call) {
 }
 
 let stream;
-let media
+let media;
+
+let Audio_delay = 1000
 
 function MainAudio() {
-    
-    
-    let nav = navigator.mediaDevices.getUserMedia({
-        "audio":true
-    }).then(x=>{
-        stream = x;
-        
-        let AudioPack = [];
-        media = new MediaStream(stream);
-        
-        media.start();
-    
-        media.addEventListener("dataavailable", function (event) {
-            AudioPack.push(event.data);
-        });
-    
-        media.addEventListener("stop", function () {
-            let audioBlob = new Blob(AudioPack);
-      
-            AudioPack = [];
-      
-            let fileReader = new FileReader();
-            fileReader.readAsDataURL(audioBlob);
-            fileReader.onloadend = function () {
-                if (!app_instanced.state.mic) return;
-      
-                let result = fileReader.result;
-                emit("voice", {body:result})
-      
-            };
-      
-            media.start();
-      
-      
-            setTimeout(function () {
-              media.stop();
-            }, 1000);
-          });
-    
-    })
 
+    
 
-    socket.on("voice", (data) => {
-        let Au = new Audio(data);
+    socket.on("voice", (d) => {
+        let data = JSON.parse(d);
+
+        if(data.user === app_instanced.state.user) return null
+
+        let Au = new Audio(data.data);
+
         Au.play();
+
+        
+        //console.log("sending voice")
 
         Au.addEventListener("ended", () => {
             Au = null
         })
     })
+    
+
+    setTimeout(() => {
+
+        navigator.mediaDevices.getUserMedia({
+            "audio":true
+        }).then(x=>{
+            stream = x;
+            
+            let AudioPack = [];
+            media = new MediaRecorder(x);
+    
+            
+            media.start();
+        
+            media.addEventListener("dataavailable", function (event) {
+                AudioPack.push(event.data);
+            });
+        
+            media.addEventListener("stop", function () {
+                let audioBlob = new Blob(AudioPack);
+          
+                AudioPack = [];
+          
+                let fileReader = new FileReader();
+                fileReader.onloadend = function () {
+                    //console.log("send voice")
+                    if (!app_instanced.state.mic) return;
+                    
+                    let result = fileReader.result;
+                    //console.log(result);
+                    
+                    emit("voice", {body:result})
+                    
+                };
+                
+                media.start();
+                
+                fileReader.readAsDataURL(audioBlob);
+          
+                setTimeout(function () {
+                  media.stop();
+                }, Audio_delay);
+            });
+    
+            setTimeout(function () {
+                media.stop();
+            }, Audio_delay);
+        
+        });
+
+    }, 100)
+    
+
+    
+
 }
 
+function configUser() {
+    
 
+    socket.on("set", (d) => {
+
+        if(app_instanced.state.mode_explore) return null
+
+        let data = JSON.parse(d);
+
+        app_instanced.setState(data.state)
+    })
+
+    socket.on("update", (d) => {
+
+        if(app_instanced.state.mode_explore) return null
+
+        let data = JSON.parse(d);
+
+        CodeEditor.scrollTo(data.x, data.y);
+
+        if (data.value !== undefined) {
+            CodeEditor.setValue(data.value);
+            setTimeout(() => {
+                CodeEditor.refresh();
+            }, 100)
+        }
+    })
+
+    socket.on("refresh_tree", () => {
+
+        if(app_instanced.state.mode_explore) return null
+
+        refresh_fs_tree()
+    })
+
+    socket.on("run", (e) =>{
+
+        if(app_instanced.state.mode_explore) return null
+
+        let data = JSON.parse(e);
+
+        run(...data.arg)
+
+    })
+
+}
+
+function configMaster(params) {
+    socket.on("getState", () => {
+
+        console.log("Request State")
+
+        fs.read(path_file_curret, (data, err) => {
+
+            emit("set", {
+                state:{
+                    edit:app_instanced.state.edit,
+                }
+            });
+    
+            emit("refresh_tree", {})
+            
+    
+
+            let extencion = get_ext(path_file_curret)
+
+            if (err) {
+                emit("run", {
+                    arg: [ "javascript", path_file_curret, "" ]
+                })
+                
+            } else {
+                emit("run", {
+                    arg: [ ext[extencion], path_file_curret, data ]
+                })
+                
+            }
+
+
+            setTimeout(() => {
+                let scroll = CodeEditor.getScrollInfo();
+                let data_Value = CodeEditor.getValue();
+                
+
+                emit("update", {
+                    x:scroll.left,
+                    y:scroll.top,
+                    value:data_Value
+                });
+            }, 100)
+
+
+
+        })
+
+
+    })
+}
 
 
 function setSockets() {
@@ -1147,6 +1391,13 @@ function main() {
                     code:x.code
                 }))
 
+                if (!x.master) {
+                    configUser()
+                    emit("getState", {})
+                } else {
+                    configMaster()
+                }
+
                 
                 refresh_fs_tree()
                 CodeEditor = CodeMirror(go("edit1"), {
@@ -1158,9 +1409,10 @@ function main() {
                     "matchBrackets":true,
                     "autoCloseBrackets":true,
                     "matchInMiddle":true,
-                    "hintOptions":true,
+                    "hintOptions":x.master,
                     "foldOptions":true,
-                    "readOnly":false
+                    "readOnly":!x.master,
+                    
                     
                     
                 });
@@ -1169,23 +1421,77 @@ function main() {
                 lee.style.width = "100%";
                 lee.style.height = "100%";
 
-                let auto_token = 0
+                if (x.master) {
 
-                CodeEditor.on("change", (target, conf) => {
+                    let auto_token = 0;
+                    let pro_token_delay_update = 0;
 
-                    
+                    let delay_update = 100
+    
+                    CodeEditor.on("change", (target, conf) => {
+    
+    
+                        // Auto update
 
-                    if (auto_token != 0) {
-                        clearTimeout(auto_token)
-                    }
+                        if (pro_token_delay_update === 0) {
+                            //clearTimeout(auto_token)
+                        
+                            setTimeout(() => {
 
-                    auto_token = setTimeout(() => {
-                        auto_token = 0
-                        saveFile(() => {
-                            console.log("auto save.")
-                        })                        
-                    }, 3000)
-                });
+
+                                let scroll = target.getScrollInfo();
+                                let data_Value = target.getValue();
+                                
+            
+                                emit("update", {
+                                    x:scroll.left,
+                                    y:scroll.top,
+                                    value:data_Value
+                                })
+
+                                pro_token_delay_update = 0;
+
+                            }, delay_update)
+                        }
+    
+    
+    
+                        // Auto guardado
+    
+                        if (auto_token != 0) {
+                            clearTimeout(auto_token)
+                        }
+    
+                        auto_token = setTimeout(() => {
+                            auto_token = 0
+                            saveFile(() => {
+                                console.log("auto save.")
+                            })                        
+                        }, 3000)
+
+
+
+
+                    });
+    
+                    CodeEditor.on("scroll", (target) => {
+                        
+                        // Auto update
+    
+                        let scroll = target.getScrollInfo();
+                        //let data_Value = target.getValue();
+                        
+    
+                        emit("update", {
+                            x:scroll.left,
+                            y:scroll.top,
+                        })
+    
+    
+    
+                    })
+                }
+
 
                 let keysoff = [
                     13, 27, 39, 38, 37, 40, 188, 32, 
@@ -1202,36 +1508,40 @@ function main() {
                 CodeEditor.on("keyup", function (cm, event) {
                     //console.log("key:", event.keyCode)
 
-                    if (!cm.state.completionActive && /*Enables keyboard navigation in autocomplete list*/
-                        !keysoff.includes(event.keyCode) &&
-                        !event.ctrlKey
-                        ) {        /*Enter - do not open autocomplete list just after item has been selected in it*/ 
-                        CodeMirror.commands.autocomplete(cm, null, {completeSingle: false});
-                    }
-
-                    switch (CodeEditor.options.mode.name) {
-                        case "css":
-                            if (event.keyCode === 32) {
-                                CodeMirror.commands.autocomplete(cm, null, {completeSingle: false});
-                                
-                            }
-                            break;
-                    
-                        default:
-                            break;
-                    }
-
-                    
-                    if (event.ctrlKey) {
-                        switch (event.keyCode) {
-                            case 32:
-                                CodeMirror.commands.autocomplete(cm, null, {completeSingle: false});
+                    if (x.master) {
+                        
+                        if (!cm.state.completionActive && /*Enables keyboard navigation in autocomplete list*/
+                            !keysoff.includes(event.keyCode) &&
+                            !event.ctrlKey
+                            ) {        /*Enter - do not open autocomplete list just after item has been selected in it*/ 
+                            CodeMirror.commands.autocomplete(cm, null, {completeSingle: false});
+                        }
+    
+                        switch (CodeEditor.options.mode.name) {
+                            case "css":
+                                if (event.keyCode === 32) {
+                                    CodeMirror.commands.autocomplete(cm, null, {completeSingle: false});
+                                    
+                                }
                                 break;
                         
                             default:
                                 break;
                         }
+    
+                        
+                        if (event.ctrlKey) {
+                            switch (event.keyCode) {
+                                case 32:
+                                    CodeMirror.commands.autocomplete(cm, null, {completeSingle: false});
+                                    break;
+                            
+                                default:
+                                    break;
+                            }
+                        }
                     }
+
                 });
 
                 setTimeout(() => {
@@ -1264,10 +1574,12 @@ window.addEventListener("keydown", (e) => {
             case "s":
                 
                 e.preventDefault();
-                
-                saveFile(() => {
-                    //console.log("manual save is done")
-                })
+                if (app_instanced.state.master) {
+                    saveFile(() => {
+                        //console.log("manual save is done")
+                    })
+                    
+                }
 
                 break;
         

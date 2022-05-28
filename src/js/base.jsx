@@ -498,6 +498,7 @@ class Img extends React.Component { // style, className, img, size, (x, y)
                     height:this.props.size||this.props.y||"",
                 }, this.props.style)}
                 onClick={genlink(this.props.click)}
+                title={this.props.title||""}
             >
                 {this.props.children}
             </div>
