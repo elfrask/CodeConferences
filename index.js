@@ -184,11 +184,6 @@ io.on("connection", (socket) => {
 
     });
 
-    let cookie = socket.client.request.headers.cookie;
-
-    console.log("a user connected");
-    console.log("cookies:", cookie);
-    console.log("cookies:", cookie.user);
 
 
 
