@@ -593,8 +593,8 @@ app.use("/src", express.static("./src"));
 app.use("/codemirror", express.static("./codemirror"));
 //app.use("/app", express.static("./public"));
 
+let PORT = process.env.PORT || 9080 
 
-
-server.listen(9080, () => {
-    console.log("open in the port 9080")
+server.listen(PORT, () => {
+    console.log(`open in the port ${PORT}`)
 })
