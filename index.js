@@ -11,12 +11,10 @@ let keys = [
     "Coding", "live", "c52sD1Q"
 ];
 
+
 let app = express();
-let server = new http.createServer(app)
-let io = new socketIO.Server( {
-    serveClient:true,
-    cookie:"CodingLive"
-} );
+let server = new http.Server(app)
+let io = new socketIO.Server(server);
 
 io.listen(server);
 
@@ -97,9 +95,12 @@ io.on("connection", (socket) => {
     let user = "";
     let code = "";
 
+    //console.log("a new user is coneccted")
+
     function distribuir(event) {
         socket.on(event, (data) => {
             //socket.emit("chat", data)
+            //console.log("a event socket is reader:", event)
     
             let x = JSON.parse(data);
     
@@ -129,6 +130,7 @@ io.on("connection", (socket) => {
     socket.on("login", (data) => {
         let x = JSON.parse(data);
 
+        //console.log("a user is login")
 
         getRoom(x.code, (room, err) => {
             if (err) {
@@ -169,6 +171,9 @@ io.on("connection", (socket) => {
     });
     
     socket.on("voice", function (dat) {
+
+        //console.log("Voice distribuit")
+        
         let data = JSON.parse(dat)
         let newData = data.body.split(";");
         newData[0] = "data:audio/ogg;";
@@ -323,6 +328,8 @@ app.get("/", (req, res, next) => {
 });
 
 function replace(t, o, n) {
+    if (o === n) return t;
+    
     while (t.includes(o)) {
         t = t.replace(o, n)
     }
@@ -333,11 +340,14 @@ app.use("/app", (req, res, next) => {
 
     let path = req.url;
     let code = req.session.code;
+    //\\
 
-    let path_file = __dirname + `\\coding\\${code}` + replace(path, "/", PATH.sep)
+    // Path siempre sera una dereccion absoluta 
 
-
+    let path_file = __dirname + replace(`/coding/${code}` + path, "/", PATH.sep);
     console.log(path_file)
+
+
 
     if (fs.existsSync(path_file)) {
         

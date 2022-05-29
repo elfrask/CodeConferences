@@ -1,5 +1,0 @@
-h2. hola
-
-# yo soy Frask!!! >:3
-
-h2. a
