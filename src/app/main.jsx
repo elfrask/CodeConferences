@@ -38,7 +38,7 @@ let INFO = (
 
             </a>
             <br />
-            Version de la app: 1.0.0
+            Version de la app: beta 0.8.0
             <div style={{width:"100%", "height":"90px"}}>
 
             </div>
@@ -1372,6 +1372,8 @@ function setSockets() {
 }
 setSockets()
 
+let delay_update = 0
+
 function main() {
     console.log("App is load end")
 
@@ -1426,7 +1428,7 @@ function main() {
                     let auto_token = 0;
                     let pro_token_delay_update = 0;
 
-                    let delay_update = 100
+                    delay_update = 100
     
                     CodeEditor.on("change", (target, conf) => {
     
