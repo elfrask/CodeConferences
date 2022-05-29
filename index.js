@@ -242,6 +242,8 @@ app.post("/islogin", (req, res) => {
 app.post("/exit", (req, res) => {
 
     let master = false
+    let user = req.session.user,
+        code = req.session.code;
 
     if (rooms[req.session.code]) {
         let room = rooms[req.session.code];
