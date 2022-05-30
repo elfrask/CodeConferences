@@ -162,10 +162,10 @@ io.on("connection", (socket) => {
 
             room.live[x.user] = undefined;
             
-            socket.emit("islogin", "true");
+            //socket.emit("islogin", "true");
         } else {
             
-            socket.emit("islogin", "false");
+            //socket.emit("islogin", "false");
         }
 
     });
