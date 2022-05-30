@@ -1465,6 +1465,15 @@ function main() {
                 })
 
                 setInterval(() => {
+                    // reconeccion forzada 
+
+                    relogin();
+
+                    // aveces no se reconecta por lo que debe
+                    // de hacer coneccion forzada
+                }, 5000)
+
+                setInterval(() => {
                     if (socket.connected === false) {
                         msgcon(false)
                         setTimeout(() => {
