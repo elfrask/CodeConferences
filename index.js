@@ -68,7 +68,7 @@ function Create_Room(username) {
             username
         ],
         code:code,
-        live:[]
+        live:{}
     }
 
     rooms[code] = room
@@ -90,12 +90,20 @@ function getRoom(code, call) {
 }
 
 
+function for_obj(obj, call) {
+    let o_a = Object.keys(obj);
+
+    o_a.forEach(x=>{
+        call(obj[x], x)
+    })
+}
+
 
 io.on("connection", (socket) => {
     let user = "";
     let code = "";
 
-    //console.log("a new user is coneccted")
+    console.log("a new user is coneccted")
 
     function distribuir(event) {
         socket.on(event, (data) => {
@@ -105,13 +113,16 @@ io.on("connection", (socket) => {
             let x = JSON.parse(data);
     
             
-            getRoom(x.code, (d, err) => {
+            getRoom(x.code, (room, err) => {
                 if (err) {
                     
                 } else {
-                    d.live.forEach(x=> {
+
+                    for_obj(room.live, (x, name) => {
                         x.emit(event, data)
                     })
+
+                
                 }
             })
     
@@ -140,7 +151,7 @@ io.on("connection", (socket) => {
             } else {
                 
                 room.live[x.user] = socket;
-                room.live.push(socket)
+                //room.live.push(socket)
 
                 user = x.user;
                 code = x.code;
@@ -153,14 +164,14 @@ io.on("connection", (socket) => {
 
     });
 
-    socket.on("logout", (data) => {
+    socket.on("relogin", (data) => {
         let x = JSON.parse(data);
 
         let room = rooms[x.code];
 
         if (room !== undefined) {
 
-            room.live[x.user] = undefined;
+            room.live[x.user] = socket;
             
             //socket.emit("islogin", "true");
         } else {
@@ -181,9 +192,14 @@ io.on("connection", (socket) => {
     
         getRoom(data.code, (room, err) => {
             if (!err) {
-                room.live.forEach(x=> {
+
+                for_obj(room.live, (x, name) => {
                     x.emit("voice", JSON.stringify({data: newData, user:data.user}))
                 })
+
+                /*room.live.forEach(x=> {
+                    x.emit("voice", JSON.stringify({data: newData, user:data.user}))
+                })*/
             }
         })
 

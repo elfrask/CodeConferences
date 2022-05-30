@@ -1382,10 +1382,8 @@ let delay_update = 0
 
 
 function relogin() {
-    socket.emit("login", JSON.stringify({
-        user:app_instanced.state.user,
-        code:app_instanced.state.code,
-    }))
+    
+    emit("relogin", {})
 
 }
 
@@ -1413,7 +1411,10 @@ function main() {
                     configMaster()
                 }
 
-                relogin();
+                socket.emit("login", JSON.stringify({
+                    user:app_instanced.state.user,
+                    code:app_instanced.state.code,
+                }))
 
 
                 setInterval(() => {
