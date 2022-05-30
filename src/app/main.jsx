@@ -1,6 +1,11 @@
 
 
-let socket = io();
+let socket = io(document.location.origin, {
+    reconnection: true,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax : 5000,
+    reconnectionAttempts: 99999
+});
 
 
 function emit(eve, data) {
@@ -1374,6 +1379,17 @@ setSockets()
 
 let delay_update = 0
 
+
+
+function relogin() {
+    socket.emit("login", JSON.stringify({
+        user:app_instanced.state.user,
+        code:app_instanced.state.code,
+    }))
+
+}
+
+
 function main() {
     console.log("App is load end")
 
@@ -1388,10 +1404,7 @@ function main() {
                 login:true
             }, () => {
 
-                socket.emit("login", JSON.stringify({
-                    user:x.user,
-                    code:x.code
-                }))
+                
 
                 if (!x.master) {
                     configUser()
@@ -1400,7 +1413,19 @@ function main() {
                     configMaster()
                 }
 
-                
+                relogin();
+
+
+                setInterval(() => {
+                    if (socket.connected === false) {
+                        setTimeout(() => {
+                            relogin();
+                            console.log("reconectando...")
+                        }, 99)
+                    }
+                }, 100)
+
+
                 refresh_fs_tree()
                 CodeEditor = CodeMirror(go("edit1"), {
                     "mode":"javascript",

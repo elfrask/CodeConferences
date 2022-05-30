@@ -160,7 +160,7 @@ io.on("connection", (socket) => {
 
         if (room !== undefined) {
 
-            room.live[x.user] = socket;
+            room.live[x.user] = undefined;
             
             socket.emit("islogin", "true");
         } else {
@@ -190,7 +190,7 @@ io.on("connection", (socket) => {
     });
 
 
-
+    
 
 })
 
