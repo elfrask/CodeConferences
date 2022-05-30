@@ -180,7 +180,11 @@ class App extends React.Component {
                                             }],
                                             ["Cerrar la sala", "/src/img/icons/exit.png", () => {
                                                 send("/exit").then(x=> {
-                                                    document.location.reload()
+                                                    emit("close_room", {})
+                                                    setTimeout(() => {
+                                                        document.location.reload()
+
+                                                    }, 500)
                                                 })
                                             }],
                                             ["Miembros", "/src/img/icons/group.png", render_users]
@@ -1308,6 +1312,9 @@ function MainAudio() {
 
 function configUser() {
     
+    socket.on("close_room", () => {
+        document.location.reload();
+    })
 
     socket.on("set", (d) => {
 
