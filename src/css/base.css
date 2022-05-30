@@ -336,6 +336,30 @@
     padding: 10px;
 }
 
+.not-wifi {
+    position: fixed;
+    transition: 0.4s;
+    top: 100%;
+    left: 10px;
+    transform: translate(0px, 0px);
+}
+
+.wife {
+    width: calc(100% - 40px);
+    height: max-content;
+    padding: 20px;
+}
+
+.offline {
+    background-color: brown;
+    color: white;
+}
+
+.online {
+    background-color: green;
+    color: white;
+}
+
 
 @media screen and (max-width: 500px) {
 

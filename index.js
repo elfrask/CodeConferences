@@ -173,7 +173,7 @@ io.on("connection", (socket) => {
 
             room.live[x.user] = socket;
             
-            //socket.emit("islogin", "true");
+            socket.emit("relogin", "true");
         } else {
             
             //socket.emit("islogin", "false");

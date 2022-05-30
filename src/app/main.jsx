@@ -740,10 +740,51 @@ class App extends React.Component {
                         </div>
                     ):[]
                 }
+                {
+                    this.state.join?(
+                        // Mensaje fuera y dentro de linea
+
+                        <div className="not-wifi" id="conet">
+                           <div className="wife offline" id="to_off">Sin conexion</div>
+                           <div className="wife online"  id="to_on">Devuelta en linea</div>
+                        </div>
+                    ):[]
+                }
             </div>
         );
     }
 }
+
+let state_wife = true
+
+function msgcon(bol) {
+
+    if (state_wife === bol) return null
+
+    state_wife = bol
+
+    let wins = [go("to_off"), go("to_on")];
+    let box = go("conet")
+
+    
+    wins.forEach(x=>{
+        x.style.display = "none"
+    })
+
+    if (bol) {
+        go("to_on").style.display = "block";
+
+        setTimeout(() => {
+            box.style.transform = "translate(0px, 0px)"
+        }, 2000)
+        
+    } else {
+        go("to_off").style.display = "block";
+        box.style.transform = "translate(0px, -70px)"
+
+    }
+}
+
 
 let chat_elements = [];
 let limit_chat = 1000;
@@ -1417,8 +1458,15 @@ function main() {
                 }))
 
 
+                // si se pierde la conexion
+
+                socket.on("relogin", () => {
+                    msgcon(true)
+                })
+
                 setInterval(() => {
                     if (socket.connected === false) {
+                        msgcon(false)
                         setTimeout(() => {
                             relogin();
                             console.log("reconectando...")
