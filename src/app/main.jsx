@@ -1471,7 +1471,7 @@ function main() {
 
                     // aveces no se reconecta por lo que debe
                     // de hacer coneccion forzada
-                }, 5000)
+                }, 3000)
 
                 setInterval(() => {
                     if (socket.connected === false) {
