@@ -43,7 +43,7 @@ let INFO = (
 
             </a>
             <br />
-            Version de la app: beta 0.8.0
+            Version de la app: beta 1.0.0
             <div style={{width:"100%", "height":"90px"}}>
 
             </div>
