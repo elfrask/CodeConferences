@@ -47,7 +47,7 @@ let open = (p) => {
 };
 
 
-let template = open("./public/index.html")
+let template = open(__dirname + "/public/index.html")
 
 function Create_Room(username) {
     
