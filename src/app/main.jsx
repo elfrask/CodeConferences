@@ -1188,7 +1188,7 @@ function refresh_fs_tree() {
     send("/get_tree").then(x=>{
         //console.log("tree:", x)
         render_tree(go("edit2"), x.app, "app", eventos_editor.FileSystem, () => {
-            console.warn("Files system tree is loadend")
+            console.warn("Files system tree is loaded")
             if (app_instanced.state.master) emit("refresh_tree", {})
         })
     })

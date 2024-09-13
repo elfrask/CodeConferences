@@ -11,10 +11,12 @@ let keys = [
     "Coding", "live", "c52sD1Q"
 ];
 
-
+let j = PATH.join;
 let app = express();
 let server = new http.Server(app)
 let io = new socketIO.Server(server);
+
+let _dr = __dirname;
 
 io.listen(server);
 
@@ -30,13 +32,13 @@ app.use(bp.json());
 
 let open = (p) => {
     let me = {
-        read:() => fs.readFileSync(p, "utf-8"),
-        write:(data) => fs.writeFileSync(p, data),
+        read:() => fs.readFileSync(PATH.normalize(p), "utf-8"),
+        write:(data) => fs.writeFileSync(PATH.normalize(p), data),
         json:{
-            read:() => JSON.parse(fs.readFileSync(p, "utf-8")),
-            write:(data) => fs.writeFileSync(p, JSON.stringify(data)),
+            read:() => JSON.parse(fs.readFileSync(PATH.normalize(p), "utf-8")),
+            write:(data) => fs.writeFileSync(PATH.normalize(p), JSON.stringify(data)),
         },
-        react:(url) => fs.readFileSync(p, "utf-8").replace(
+        react:(url) => fs.readFileSync(PATH.normalize(p), "utf-8").replace(
             "{script}", 
             `<script src="${url}" type="text/babel"></script>`
         )
@@ -103,7 +105,7 @@ io.on("connection", (socket) => {
     let user = "";
     let code = "";
 
-    console.log("a new user is coneccted")
+    console.log("a new user is conected")
 
     function distribuir(event) {
         socket.on(event, (data) => {
@@ -213,8 +215,8 @@ io.on("connection", (socket) => {
 
 app.get("/clear", (req, res, next) => {
 
-    fs.readdirSync("./coding", "utf8").forEach(x=>{
-        fs.rmdirSync(`./coding/${x}`, {"recursive":true})
+    fs.readdirSync(PATH.normalize("./coding"), "utf8").forEach(x=>{
+        fs.rmdirSync(PATH.normalize(`./coding/${x}`), {"recursive":true})
     })
     rooms = [];
     
@@ -360,28 +362,66 @@ app.use("/app", (req, res, next) => {
 
     // Path siempre sera una dereccion absoluta 
 
+    // let path_file = PATH.normalize(`${__dirname}/coding/${code}`);
     let path_file = __dirname + replace(`/coding/${code}` + path, "/", PATH.sep);
     console.log(path_file)
 
 
 
+    // if (fs.existsSync(path_file)) {
+
+
+    //     if (fs.lstatSync(path_file).isDirectory()) {
+    //         //path_file = path_file + "/index.html";
+    //         // res.redirect( clear_path("/app" + path + "/index.html"));
+    //         console.log("/app", `'${path}' - to index file`)
+    //         let end_path = PATH.normalize(path_file + "/index.html")
+    //         console.log("end_path is:", end_path)
+            
+    //         if (fs.existsSync(end_path)) {
+    
+    //             if (fs.lstatSync(end_path).isFile()) {
+    //                 // res.sendFile(end_path)
+    //                 res.send(open(PATH.normalize(end_path)).read())
+    //                 // res.send("")
+    //             } else {
+    
+    //                 res.send(open(PATH.normalize("./public/404.html")).read())
+    //             }
+    
+    //         } else {
+    //             // res.sendFile(PATH.normalize(__dirname + "/public/404.html"))
+    //             res.send(open(PATH.normalize("./public/404.html")).read())
+    
+    //         };
+    //     }
+    // }
+
     if (fs.existsSync(path_file)) {
-        
+
+
         if (fs.lstatSync(path_file).isDirectory()) {
             //path_file = path_file + "/index.html";
             res.redirect( clear_path("/app" + path + "/index.html"));
+            
         }
-
-
     }
+    
+
+    
+
+
+    
 
     if (!fs.existsSync(path_file)) {
         
-        res.send(`
+        // res.send(`
         
-        the page '${req.url}' not found
+        // the page '${req.url}' not found
         
-        `)
+        // `)
+
+        res.send(open(PATH.normalize("./public/404.html")).read())
     
     } else {
 
@@ -392,7 +432,6 @@ app.use("/app", (req, res, next) => {
 
 
 
-    //next()
 });
 app.post("/read", (req, res, next) => {
 
@@ -400,7 +439,7 @@ app.post("/read", (req, res, next) => {
     let user = req.session.user;
 
     let path = req.body.path
-    let complet_path = `${__dirname}/coding/${code}/${path}`;
+    let complet_path = PATH.normalize(`${__dirname}/coding/${code}/${path}`);
     let data = ""
     let error = true
 
@@ -426,8 +465,8 @@ app.post("/delete", (req, res, next) => {
 
     let path = req.body.path;
 
-    let complet_path = `${__dirname}/coding/${code}/${path}`;
-    let dir_path = `${__dirname}/coding/${code}/${PATH.dirname(path)}`;
+    let complet_path = PATH.normalize(`${__dirname}/coding/${code}/${path}`);
+    let dir_path =  PATH.normalize(`${__dirname}/coding/${code}/${PATH.dirname(path)}`) ;
     let error = true
 
     if (rooms[code].master != user) {
@@ -437,11 +476,13 @@ app.post("/delete", (req, res, next) => {
 
     if (fs.existsSync(complet_path)) {
         error = false
-        if (isrmdir) {
-            fs.rmdirSync(clear_path(complet_path), {recursive:true})
+        if (fs.lstatSync(complet_path).isDirectory()) {
+            fs.rmdirSync(PATH.normalize(clear_path(complet_path)), {recursive:true})
         } else {
-            fs.unlinkSync(clear_path(complet_path))
+            fs.unlinkSync(PATH.normalize(clear_path(complet_path)))
         }
+
+        console.log("delete file or folder:", complet_path)
     }
 
 
@@ -461,8 +502,8 @@ app.post("/rename", (req, res) => {
 
     let data = req.body.data;
 
-    let complet_path = `${__dirname}/coding/${code}/${path}`;
-    let complet_new_path = `${__dirname}/coding/${code}/${new_path}`;
+    let complet_path =  PATH.normalize(`${__dirname}/coding/${code}/${path}`);
+    let complet_new_path = PATH.normalize(`${__dirname}/coding/${code}/${new_path}`);
     let dir_new_path = PATH.dirname(complet_new_path);
     let dir_path = PATH.dirname(complet_path);
     let error = true
@@ -507,7 +548,7 @@ app.post("/write", (req, res, next) => {
 
     let data = req.body.data;
 
-    let complet_path = clear_path(`${__dirname}/coding/${code}/${path}`);
+    let complet_path = PATH.normalize(`${__dirname}/coding/${code}/${path}`);
     let dir_path = PATH.dirname(complet_path);
     let error = true
 
@@ -537,7 +578,7 @@ app.post("/write", (req, res, next) => {
 app.post("/get_tree", (req, res) => {
 
     let code = req.session.code;
-    let path_work = `${__dirname}/coding/${code}/`;
+    let path_work = PATH.normalize(`${__dirname}/coding/${code}/`);
 
     function getTree(dir) {
         let dire = fs.readdirSync(dir, "utf8");
@@ -547,7 +588,7 @@ app.post("/get_tree", (req, res) => {
 
         dire.forEach(x=>{
             
-            let dd = dir + "/" + x;
+            let dd = PATH.normalize(dir + "/" + x);
 
             if (fs.lstatSync(dd).isFile()) {
                 salida[x] = dd.slice(path_work.length);
