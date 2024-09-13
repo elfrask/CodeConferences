@@ -646,8 +646,8 @@ app.post("/create_room", (req, res) => {
 
 
 
-app.use("/src", express.static("./src"));
-app.use("/codemirror", express.static("./codemirror"));
+app.use("/src", express.static(PATH.normalize(__dirname + "/src")));
+app.use("/codemirror", express.static( PATH.normalize(__dirname + "/codemirror")));
 //app.use("/app", express.static("./public"));
 
 let PORT = process.env.PORT || 9080 
