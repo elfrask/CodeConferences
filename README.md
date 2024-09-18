@@ -48,3 +48,11 @@
 <p>
     el proyecto se abrirá en el puerto 9080
 </p>
+
+<h1>
+    Importante
+</h1>
+
+<p>
+    por la manera en como el proyecto esta construido esta tiene problemas al momento de hostearlo en Vercel, lo cual se aconseja hacer uso de un vps o servidor físico
+</p>
