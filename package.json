@@ -5,10 +5,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "play": "node .",
-    "production": "node .",
-    "start": "node ."
+    "production": "node . ",
+    "start": "node .",
+    "dev": "nodemon . --ignore ./coding"
   },
-  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/elfrask/CodeConferences.git"
@@ -33,6 +33,8 @@
     "socket.io": "^4.5.0",
     "socket.io-client": "^4.5.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^3.1.5"
+  },
   "description": ""
 }
